@@ -37,7 +37,8 @@ public class Settings {
     private final String NOTIFICATIONS_IS_DISABLED = "notIsDisabled";
     private final String STREAM_PLAYER_SHOW_VIEWERCOUNT = "streamPlayerShowViewerCount",
             STREAM_PLAYER_REVEAL_NAVIGATION = "streamPlayerRevealNavigation",
-            STREAM_PLAYER_AUTO_PLAYBACK = "streamPlayerAutoPlackbackOnReturn";
+            STREAM_PLAYER_AUTO_PLAYBACK = "streamPlayerAutoPlackbackOnReturn",
+            STREAM_PLAYER_THUNDERDOME_BLOCKING = "streamPlayerThunderdomeBlocking";
     private final String APPEARANCE_STREAM_STYLE = "appStreamStyle";
     private final String APPEARANCE_GAME_STYLE = "appGameStyle";
     private final String APPEARANCE_FOLLOW_STYLE = "appFollowStyle";
@@ -688,6 +689,21 @@ public class Settings {
     public boolean getStreamPlayerAutoContinuePlaybackOnReturn() {
         SharedPreferences preferences = getPreferences();
         return preferences.getBoolean(this.STREAM_PLAYER_AUTO_PLAYBACK, false);
+    }
+
+    /**
+     * Stream Player - Thunderdome
+     */
+
+    public void setStreamPlayerThunderdomeBlocking(boolean blocking) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putBoolean(this.STREAM_PLAYER_THUNDERDOME_BLOCKING, blocking);
+        editor.commit();
+    }
+
+    public boolean getStreamPlayerThunderdomeBlocking() {
+        SharedPreferences preferences = getPreferences();
+        return preferences.getBoolean(this.STREAM_PLAYER_THUNDERDOME_BLOCKING, false);
     }
 
     /**

@@ -28,13 +28,21 @@ public class GetVODStreamURL extends GetLiveStreamURL {
     @Override
     protected LinkedHashMap<String, Quality> doInBackground(String... params) {
         String vodId = params[0];
+        Boolean Thunderdome = Boolean.valueOf(params[1]);
         String signature = "";
         String token = "";
+        String player;
+
+        if (Thunderdome) {
+            player = "thunderdome";
+        } else {
+            player = "embed";
+        }
 
         Request request = new Request.Builder()
                 .url("https://gql.twitch.tv/gql")
                 .header("Client-ID", SecretKeys.TWITCH_WEB_CLIENT_ID)
-                .post(RequestBody.create(MediaType.get("application/json"), formatQuery(false, vodId)))
+                .post(RequestBody.create(MediaType.get("application/json"), formatQuery(false, vodId, player)))
                 .build();
 
         String resultString = Service.urlToJSONString(request);

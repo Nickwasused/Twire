@@ -16,8 +16,8 @@ import com.perflyst.twire.service.Settings;
 public class SettingsStreamPlayerActivity extends ThemeActivity {
 
     private Settings settings;
-    private TextView mShowViewCountSummary, mShowNavigationBarSummary, mAutoPlaybackSummary;
-    private CheckedTextView mShowViewCountView, mShowNavigationBarView, mAutoPlaybackView;
+    private TextView mShowViewCountSummary, mShowNavigationBarSummary, mAutoPlaybackSummary, mPlayerThunderdomeSummary;
+    private CheckedTextView mShowViewCountView, mShowNavigationBarView, mAutoPlaybackView, mPlayerThunderdomeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +28,12 @@ public class SettingsStreamPlayerActivity extends ThemeActivity {
         mShowNavigationBarView = findViewById(R.id.player_show_navigation_title);
         mShowViewCountView = findViewById(R.id.player_show_viewercount_title);
         mAutoPlaybackView = findViewById(R.id.player_auto_continue_playback_title);
+        mPlayerThunderdomeView = findViewById(R.id.player_thunderdome_blocking_title);
 
         mShowViewCountSummary = findViewById(R.id.player_show_viewercount_title_summary);
         mShowNavigationBarSummary = findViewById(R.id.player_show_navigation_summary);
         mAutoPlaybackSummary = findViewById(R.id.player_auto_continue_playback_summary);
+        mPlayerThunderdomeSummary = findViewById(R.id.player_thunderdome_blocking_summary);
 
         final Toolbar toolbar = findViewById(R.id.settings_player_toolbar);
         setSupportActionBar(toolbar);
@@ -68,6 +70,7 @@ public class SettingsStreamPlayerActivity extends ThemeActivity {
         updateSummary(mShowViewCountView, mShowViewCountSummary, settings.getStreamPlayerShowViewerCount());
         updateSummary(mShowNavigationBarView, mShowNavigationBarSummary, settings.getStreamPlayerShowNavigationBar());
         updateSummary(mAutoPlaybackView, mAutoPlaybackSummary, settings.getStreamPlayerAutoContinuePlaybackOnReturn());
+        updateSummary(mPlayerThunderdomeView, mPlayerThunderdomeSummary, settings.getStreamPlayerThunderdomeBlocking());
     }
 
     public void onClickShowNavigationBar(View v) {
@@ -84,4 +87,10 @@ public class SettingsStreamPlayerActivity extends ThemeActivity {
         settings.setStreamPlayerAutoContinuePlaybackOnReturn(!settings.getStreamPlayerAutoContinuePlaybackOnReturn());
         updateSummaries();
     }
+
+    public void onClickThunderdomeBlocking(View v) {
+        settings.setStreamPlayerThunderdomeBlocking(!settings.getStreamPlayerThunderdomeBlocking());
+        updateSummaries();
+    }
+
 }
