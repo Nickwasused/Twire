@@ -45,7 +45,7 @@ public class LoginActivity extends SetupBaseActivity {
     private final String LOGIN_URL = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=" +
             Service.getApplicationClientID() +
             "&redirect_uri=http%3A%2F%2Flocalhost/oauth_authorizing" +
-            "&scope=user_read+chat:read+chat:edit+user_follows_edit+user_subscriptions";
+            "&scope=user:read:email+channel:read:editors+chat:edit+user:edit:follows+user:read:subscriptions";
     private final int SHOW_WEBVIEW_ANIMATION_DURATION = 900;
     private final int SHOW_SUCCESS_ICON_DURATION = 800;
     private final int REVEAL_ANIMATION_DURATION = 650;

@@ -514,6 +514,52 @@ public class Service {
         return urlToJSONString(request);
     }
 
+    // Insert duplicate for auth here
+
+    public static String urlToJSONStringAuth(String urlToRead, String token) {
+        // Alright, so sometimes Twitch decides that our client ID should be blocked. Currently only happens for the hidden /api endpoints.
+        // IF we are being blocked, then retry the request with Twitch web ClientID. They are typically not blocking this.
+        String result = urlToJSONStringAuth(urlToRead, true, token); // "{\"error\":\"Gone\",\"status\":410,\"message\":\"this API has been removed.\"}";
+        boolean retryWithWebClientId = false;
+        if (result == null || result.isEmpty()) {
+            retryWithWebClientId = true;
+        } else {
+            try {
+                JSONObject resultJson = new JSONObject(result);
+                int status = resultJson.getInt("status");
+                String error = resultJson.getString("error");
+                retryWithWebClientId = status == 410 || error.equals("Gone");
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (retryWithWebClientId) {
+            result = urlToJSONString(urlToRead, false);
+        }
+
+        return result == null ? "" : result;
+    }
+
+    private static String urlToJSONStringAuth(String urlToRead, Boolean useOurClientId, String token) {
+        String clientId;
+        if (useOurClientId) {
+            clientId = Service.getApplicationClientID();
+        } else {
+            clientId = Service.getTwitchWebClientID();
+        }
+
+        Request request = new Request.Builder()
+                .url(urlToRead)
+                .header("Client-ID", clientId)
+                .header("Authorization", "Bearer " + token)
+                .header("Accept", "application/vnd.twitchtv.v5+json")
+                .build();
+
+        return urlToJSONString(request);
+    }
+
+    // end duplicate here
+
     public static String urlToJSONString(Request request) {
         SimpleResponse response = makeRequest(request);
         if (response == null)
