@@ -41,6 +41,7 @@ import com.rey.material.widget.ProgressView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 
 public abstract class MainActivity<E extends Comparable<E> & MainElement> extends ThemeActivity {
@@ -170,6 +171,9 @@ public abstract class MainActivity<E extends Comparable<E> & MainElement> extend
         checkForTip();
         checkForUpdate();
         customizeActivity();
+
+        //init Orbot
+        OrbotHelper.get(this).init();
     }
 
     @Override

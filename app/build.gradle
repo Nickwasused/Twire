@@ -97,6 +97,11 @@ dependencies {
     //https://github.com/google/conscrypt/releases
     implementation "org.conscrypt:conscrypt-android:2.5.2"
 
+    //https://github.com/guardianproject/netcipher
+    //https://github.com/guardianproject/orbot/
+    implementation 'info.guardianproject.netcipher:netcipher:2.1.0'
+    implementation 'info.guardianproject.netcipher:netcipher-okhttp3:3.12.13'
+
     //https://github.com/square/okhttp
     implementation "com.squareup.okhttp3:okhttp:3.12.13"
 }
