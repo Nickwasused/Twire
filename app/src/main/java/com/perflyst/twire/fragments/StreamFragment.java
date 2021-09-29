@@ -1418,10 +1418,10 @@ public class StreamFragment extends Fragment implements Player.Listener {
 
         if (vodId == null) {
             GetLiveStreamURL task = new GetLiveStreamURL(callback);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mChannelInfo.getStreamerName(), types[settings.getStreamPlayerType()]);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mChannelInfo.getStreamerName(), types[settings.getStreamPlayerType()], settings.getStreamPlayerUseProxyString(), settings.getStreamPlayerProxyUrl());
         } else {
             GetLiveStreamURL task = new GetVODStreamURL(callback);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, vodId.substring(1), types[settings.getStreamPlayerType()]);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, vodId.substring(1), types[settings.getStreamPlayerType()], settings.getStreamPlayerUseProxyString(), settings.getStreamPlayerProxyUrl());
         }
     }
 
@@ -1504,10 +1504,15 @@ public class StreamFragment extends Fragment implements Player.Listener {
                 .setDefaultRequestProperties(new HashMap<String, String>() {{
                     put("Referer", "https://player.twitch.tv");
                     put("Origin", "https://player.twitch.tv");
+                    //add the donation header otherwise you get a 401 error
+                    if (url.contains(settings.getStreamPlayerProxyUrl())) {
+                        put("X-Donate-To", settings.getStreamPlayerProxyUrl().replace("api.", "") + "/donate");
+                    }
                 }});
 
         MediaSource mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(MediaItem.fromUri(Uri.parse(url)));
+        Log.d("Playing", url);
         currentMediaSource = mediaSource;
         player.setMediaSource(mediaSource);
         player.prepare();
