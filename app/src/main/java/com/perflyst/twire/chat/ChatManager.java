@@ -222,6 +222,9 @@ public class ChatManager extends AsyncTask<Void, ChatManager.ProgressUpdate, Voi
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+            // reset the delay on successful connection
+            reconnectdelay = defaultreconnectdelay;
+
             writer.write("PASS " + password + "\r\n");
             writer.write("NICK " + user + "\r\n");
             writer.write("USER " + user + " \r\n");
@@ -229,8 +232,6 @@ public class ChatManager extends AsyncTask<Void, ChatManager.ProgressUpdate, Voi
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // reset the delay on successful connection
-                reconnectdelay = defaultreconnectdelay;
                 if (isStopping) {
                     leaveChannel();
                     Log.d(LOG_TAG, "Stopping chat for " + channelName);
