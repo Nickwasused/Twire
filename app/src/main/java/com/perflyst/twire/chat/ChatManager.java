@@ -69,6 +69,11 @@ public class ChatManager extends AsyncTask<Void, ChatManager.ProgressUpdate, Voi
     private int twitchChatPortunsecure = 6667;
     private int twitchChatPortsecure = 6697;
     private int twitchChatPort;
+    // one second
+    private int defaultreconnectdelay = 1000;
+    // 1 minuete should be enough
+    private int defaultmaxdelay = 60000;
+    private int reconnectdelay = defaultreconnectdelay;
 
     private BufferedWriter writer;
     private Handler callbackHandler;
@@ -224,6 +229,8 @@ public class ChatManager extends AsyncTask<Void, ChatManager.ProgressUpdate, Voi
 
             String line;
             while ((line = reader.readLine()) != null) {
+                // reset the delay on successful connection
+                reconnectdelay = defaultreconnectdelay;
                 if (isStopping) {
                     leaveChannel();
                     Log.d(LOG_TAG, "Stopping chat for " + channelName);
@@ -232,7 +239,7 @@ public class ChatManager extends AsyncTask<Void, ChatManager.ProgressUpdate, Voi
 
                 if (line.contains("004 " + user + " :")) {
                     Log.d(LOG_TAG, "<" + line);
-                    Log.d(LOG_TAG, "Connected >> " + user + " ~ irc.twitch.tv");
+                    Log.d(LOG_TAG, "Connected >> " + user + " ~ " + twitchChatServer + ":" + twitchChatPort);
                     onProgressUpdate(new ProgressUpdate(ProgressUpdate.UpdateType.ON_CONNECTED));
                     sendRawMessage("CAP REQ :twitch.tv/tags twitch.tv/commands");
                     sendRawMessage("JOIN " + hashChannel + "\r\n");
@@ -261,7 +268,13 @@ public class ChatManager extends AsyncTask<Void, ChatManager.ProgressUpdate, Voi
             e.printStackTrace();
 
             onProgressUpdate(new ProgressUpdate(ProgressUpdate.UpdateType.ON_CONNECTION_FAILED));
-            SystemClock.sleep(2500);
+            if (reconnectdelay >= defaultmaxdelay) {
+                reconnectdelay = defaultmaxdelay;
+            }
+            SystemClock.sleep(reconnectdelay);
+            Log.d(LOG_TAG, "Reconnect delay is at : " + reconnectdelay);
+            // duplicate the delay 1sec/2sec/4sec/8sec/16sec
+            reconnectdelay = reconnectdelay * 2;
             onProgressUpdate(new ProgressUpdate(ProgressUpdate.UpdateType.ON_RECONNECTING));
             connect(address, port);
         }
@@ -383,7 +396,13 @@ public class ChatManager extends AsyncTask<Void, ChatManager.ProgressUpdate, Voi
             e.printStackTrace();
 
             onProgressUpdate(new ProgressUpdate(ProgressUpdate.UpdateType.ON_CONNECTION_FAILED));
-            SystemClock.sleep(2500);
+            if (reconnectdelay >= defaultmaxdelay) {
+                reconnectdelay = defaultmaxdelay;
+            }
+            SystemClock.sleep(reconnectdelay);
+            Log.d(LOG_TAG, "Reconnect delay is at : " + reconnectdelay);
+            // duplicate the delay 1sec/2sec/4sec/8sec/16sec
+            reconnectdelay = reconnectdelay * 2;
             onProgressUpdate(new ProgressUpdate(ProgressUpdate.UpdateType.ON_RECONNECTING));
             processVodChat();
         }
