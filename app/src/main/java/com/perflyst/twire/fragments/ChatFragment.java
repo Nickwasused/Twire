@@ -399,14 +399,18 @@ public class ChatFragment extends Fragment implements EmoteKeyboardDelegate, Cha
      * Load the previously used emotes.
      */
     private void loadRecentEmotes() {
-        if (recentEmotes == null) {
-            recentEmotes = new ArrayList<>();
-            ArrayList<Emote> emotesFromSettings = settings.getRecentEmotes();
-            if (emotesFromSettings != null) {
-                recentEmotes.addAll(emotesFromSettings);
-            } else {
-                Log.e(LOG_TAG, "Failed to load recent emotes");
+        try {
+                if (recentEmotes == null) {
+                    recentEmotes = new ArrayList<>();
+                    ArrayList<Emote> emotesFromSettings = settings.getRecentEmotes();
+                if (emotesFromSettings != null) {
+                    recentEmotes.addAll(emotesFromSettings);
+                } else {
+                    Log.e(LOG_TAG, "Failed to load recent emotes");
+                }
             }
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Failed to load recent emotes, because of: " + e);
         }
     }
 
